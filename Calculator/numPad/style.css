@@ -49,50 +49,5 @@
     background-color: #d0d0d0;
 }
 
-input{
-    appearance: "none";
-    position: relative;
-    width: 60px;
-    height: 60px;
-    
-    /* margin */
-    margin-left: -16px;
-    margin-top: -16px;
-    /* left padding */
-    padding-left: 10px;
-    padding-right: -20px;
-    background-color: #e0e0e0;
-    transition: background .3s;
-}
-
-input::after{
-    content:"/";
-    position: absolute;
-    top: 30%;
-    left: 45%;
-}
-
-input:checked{
-    background-color: aquamarine;
-}
-
-.op {
-    padding: 15px;
-    font-size: 1.2rem;
-    cursor: pointer;
-    background-color: #e0e0e0;
-    border: 1px solid #bbb;
-    border-radius: 5px;
-    transition: background-color 0.2s ease;
-
-    grid-column: 4;
-    grid-row: 2;
-}
-
-.op:active{
-    font-size: 1rem;
-}
-
-.op:hover {
-    background-color: #d0d0d0;
-}
+.btn.active-op { 
+    background-color: aquamarine; }

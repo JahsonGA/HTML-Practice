@@ -15,25 +15,33 @@ buttons.forEach(btn => {
     // listen for click, then do ...
     //      e is the event object trigger by the "click". the object e.target hold the values of the div set in the html file
     //      e.target.value hold the value the object
+    btn.addEventListener("click",(e) => {
+        handleButtonClick(e.target.value);
+        
+    })
+})
+
+function handleButtonClick(button)
+{
     const substr = "+"
     const substr_eq = "="
-    btn.addEventListener("click",(e) => {
-        // concatenates the input of each event together and send to screen class
+
+    // concatenates the input of each event together and send to screen class
         if(input1 == 0){
-            input1 = e.target.value;
+            input1 = button;
         }
         else{
-            input1 = input1 + e.target.value;
+            input1 = input1 + button;
         }
 
         screen.innerHTML = input1;
 
         if (input1.includes(substr)) {
             if(input2 == 0){
-                input2 = e.target.value;
+                input2 = button;
             }
             else{
-                input2 = input2 + e.target.value;
+                input2 = input2 + button;
             }
 
             screen.innerHTML = input2;
@@ -46,50 +54,52 @@ buttons.forEach(btn => {
         // play sound
         const audio = new Audio("./click.mp3");
         audio.play();
-        
-    })
-})
+}
+// appends a digit (0–9) to the current input string. Stores it in currentInput.
+function appendDigit(digit){
 
-function addition(x, y){
+}
+
+// adds a . to currentInput only if one isn't already present.
+function appendDecimal(){
+
+}
+/*Stores the current input as firstOperand
+
+Stores the selected operator in currentOperator
+
+Sets a flag isTypingSecondOperand = true
+
+Optionally highlights the operator button*/
+function handleOperator(op){
+
+}
+
+/*Takes firstOperand, currentOperator, and currentInput (as second operand)
+
+Computes result
+
+Updates display and resets state
+
+Clears operator highlight*/
+function evaluateExpression(){
+
+}
+
+//Resets everything (firstOperand, currentInput, operator, flags)
+function clearAll(){
+    
+}
+
+//Clears only currentInput
+function clearEntry(){
+    
+}
+
+//Removes last character from currentInput
+function delLast(){
+    
+}
+function addition(x,y){
     return x+y;
-
-}
-
-function subtraction(x,y){
-    return x-y;
-
-}
-
-function multiplication(x,y){
-    return x*y;
-}
-
-function division(x,y){
-    if(y == 0){
-        return "Cannot divide by zero";
-    }
-    else{
-        return x/y;
-    }
-    
-}
-
-function equal(){
-    
-}
-
-function clear(){
-    
-}
-
-function clear_entry(){
-    
-}
-
-function Delete(){
-    
-}
-
-function positive_to_negative(){
-    
 }

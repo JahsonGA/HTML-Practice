@@ -17,5 +17,7 @@ buttons.forEach(btn => {
         // concatenates the input of each event together and send to screen class
         numbers  = numbers + e.target.value;
         screen.innerHTML = numbers;
+        const audio = new Audio("./click.mp3");
+        audio.play();
     })
 })

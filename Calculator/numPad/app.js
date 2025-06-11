@@ -1,4 +1,5 @@
 const screen = document.getElementById("screen");
+const history = document.getElementById("log");
 
 // get all buttons in number pad
 // stored in node list, which is like an array
@@ -29,7 +30,6 @@ buttons.forEach(btn => {
 
 function handleButtonClick(value)
 {
-    //TODO CE, clear, delete dont work at intend in the display
     switch (value) {
         case "+":
             handleOperator(value);
@@ -56,7 +56,7 @@ function handleButtonClick(value)
             clearEntry();
             break;
         case "ce":
-            clearEntry();
+            clearAll();
             break;
         case "delete":
             delLast();
@@ -66,8 +66,6 @@ function handleButtonClick(value)
             appendDigit(value)
             break;
         }
-
-    //TODO Chaining operations
 
     // play sound
     const audio = new Audio("./click.mp3");
@@ -103,8 +101,34 @@ function appendDecimal(){
 }
 
 function swapOP(){
-    express = parseFloat(currentInput);
-    currentInput = express * -1;
+    // Step 1: Ensure currentInput is always treated as string
+    let inputStr = String(currentInput || "0");
+    
+    // Step 2: Clean special cases
+    if (inputStr === "undefined" || inputStr === "NaN") {
+        inputStr = "0";
+    }
+    
+    // Step 3: Handle empty/zero cases
+    if (inputStr === "" || inputStr === "0" || inputStr === "00") {
+        currentInput = "0";
+        screen.innerHTML = "0";
+        return;
+    }
+    
+    // Step 4: Parse and validate
+    const number = parseFloat(inputStr);
+    if (isNaN(number)) {
+        console.error("Invalid number for sign swap");
+        currentInput = "0";
+    } else {
+        currentInput = (number * -1).toString();
+    }
+    
+    // Step 5: Final cleanup
+    if (currentInput === "-0") currentInput = "0";
+    
+    // Update display
     screen.innerHTML = currentInput;
 }
 /*Stores the current input as firstOperand
@@ -203,6 +227,14 @@ function evaluateExpression(){
         return;
     }
 
+    if (results.toString().includes("."))
+    {
+        results = results.toFixed(4);
+    }
+    
+    // update history
+    history.innerHTML = firstOperand + " " + currentOperator + " " + currentInput + " = " + results.toString();
+
     //parse int to string and display
     currentInput = results.toString();
     firstOperand = results.toString();
@@ -211,6 +243,7 @@ function evaluateExpression(){
     shouldResetInput = true;
 
     screen.innerHTML = currentInput;
+    
     highlightOperator("");
     //clearAll();
 
@@ -223,6 +256,7 @@ function clearAll(){
     shouldResetInput = true;	    
 
     screen.innerHTML = "0";
+    highlightOperator("");
 }
 
 //Clears only currentInput
@@ -272,7 +306,7 @@ function multiplication(x,y){
 function division(x,y){
 
     if (y === 0){
-        screen.innerHTML = "Cannot dvivide by zero";
+        screen.innerHTML = "Cannot divide by zero";
         return null;
     }
     return x / y;

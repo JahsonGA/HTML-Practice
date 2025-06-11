@@ -14,6 +14,21 @@
 }
 
 /* Display styling */
+.history{
+    grid-column: 1 / -1;   
+    grid-row: 1 / 2; 
+    margin-top: 10px;
+}
+#log{
+    width: 90%;
+    height: 15px;
+    font-size: .5;
+    text-align: right;
+    padding: 10px;
+    background: #fff;
+    border: 1px solid #ccc;
+    margin-bottom: 0px;
+}
 .src{
     grid-column: 1 / -1;   
     grid-row: 1 / 2; 
@@ -21,7 +36,7 @@
 }
 #screen {      
     width: 90%;
-    height: 45px;
+    height: 20px;
     font-size: 1.5rem;
     text-align: right;
     padding: 10px;

@@ -29,6 +29,7 @@ buttons.forEach(btn => {
 
 function handleButtonClick(value)
 {
+    //TODO CE, clear, delete dont work at intend in the display
     switch (value) {
         case "+":
             handleOperator(value);
@@ -48,13 +49,16 @@ function handleButtonClick(value)
         case ".":
             appendDecimal();
             break;
-        case "C":
+        case "-1":
+            swapOP();
+            break;
+        case "clear":
             clearEntry();
             break;
-        case "CE":
+        case "ce":
             clearEntry();
             break;
-        case "del":
+        case "delete":
             delLast();
             break;
         default:
@@ -94,8 +98,14 @@ function appendDigit(digit){
 function appendDecimal(){
     if (!(currentInput.includes('.'))){
         currentInput = currentInput + ".";
+        screen.innerHTML = currentInput;
     }    
+}
 
+function swapOP(){
+    express = parseFloat(currentInput);
+    currentInput = express * -1;
+    screen.innerHTML = currentInput;
 }
 /*Stores the current input as firstOperand
 
@@ -106,16 +116,24 @@ Sets a flag isTypingSecondOperand = true
 Optionally highlights the operator button*/
 function handleOperator(op){
 
-    // if user enters operation
-    if(!firstOperand)
-    {
-        firstOperand = currentInput
+    if (currentOperator && isTypingSecondOperand) {
+        // User changed operator before typing second number
         currentOperator = op;
-        isTypingSecondOperand = true
-
         highlightOperator(op);
+        return;
     }
-    
+
+    if (!firstOperand || shouldResetInput) {
+        firstOperand = currentInput;
+        shouldResetInput = false;
+    } else {
+        evaluateExpression();
+        firstOperand = currentInput;
+    }
+
+    currentOperator = op;
+    isTypingSecondOperand = true;
+    highlightOperator(op);
 }
 
 /*Takes firstOperand, currentOperator, and currentInput (as second operand)
@@ -176,30 +194,48 @@ function evaluateExpression(){
             return;
     }
 
+    //! Error trap
+    if (results === null) {
+        
+        currentOperator = "";	        
+        isTypingSecondOperand = false;	
+        shouldResetInput = true;
+        return;
+    }
+
     //parse int to string and display
     currentInput = results.toString();
+    firstOperand = results.toString();
+    currentOperator = "";
+    isTypingSecondOperand = false;
+    shouldResetInput = true;
+
     screen.innerHTML = currentInput;
-    clearAll();
+    highlightOperator("");
+    //clearAll();
 
 }
 
 //Resets everything (firstOperand, currentInput, operator, flags)
-function clearAll(){
-    currentInput = "";          
-    firstOperand = "";	            
+function clearAll(){            
     currentOperator = "";	        
     isTypingSecondOperand = false;	
-    shouldResetInput = false;	    
+    shouldResetInput = true;	    
+
+    screen.innerHTML = "0";
 }
 
 //Clears only currentInput
 function clearEntry(){
-    currentOperator = "";
+    currentInput = "";
+
+    screen.innerHTML = "0";
 }
 
 //Removes last character from currentInput
 function delLast(){
-    
+    currentInput = currentInput.slice(0,-1);
+    screen.innerHTML = currentInput;
 }
 /*Clear all highlights
 
@@ -234,6 +270,10 @@ function multiplication(x,y){
 }
 
 function division(x,y){
-    //TODO Error traps for zeros
+
+    if (y === 0){
+        screen.innerHTML = "Cannot dvivide by zero";
+        return null;
+    }
     return x / y;
 }

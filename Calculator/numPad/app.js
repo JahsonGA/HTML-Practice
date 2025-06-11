@@ -1,9 +1,17 @@
 const screen = document.getElementById("screen");
+
 // get all buttons in number pad
 // stored in node list, which is like an array
 const buttons = document.querySelectorAll(".btn");
 const ops = document.querySelectorAll(".btn-check")
-console.log(buttons)
+const operatorButtons = document.querySelectorAll(".operator");
+
+
+let currentInput = "";               //What user is typing right now
+let firstOperand = "";	            //Stored value before operator
+let currentOperator = "";	        //Selected operator (+, -, etc.)
+let isTypingSecondOperand = false;	//Flag: true when second number is being typed
+let shouldResetInput = false;	    //Flag: true after =, so next digit clears screen
 
 
 // loop through node list in ascending order
@@ -21,35 +29,43 @@ buttons.forEach(btn => {
     })
 })
 
-function handleButtonClick(button)
+function handleButtonClick(value)
 {
-    const substr = "+"
-    const substr_eq = "="
-
-    // concatenates the input of each event together and send to screen class
-        if(input1 == 0){
-            input1 = button;
+    switch (value) {
+        case "+":
+            handleOperator(value);
+            break;
+        case "-":
+            handleOperator(value);
+            break;
+        case "*":
+            handleOperator(value);
+            break;
+        case "/":
+            handleOperator(value);
+            break;
+        case "=":
+            evaluateExpression();
+            break;
+        case ".":
+            appendDecimal();
+            break;
+        case "C":
+            clearEntry();
+            break;
+        case "CE":
+            clearEntry();
+            break;
+        case "del":
+            delLast();
+            break;
+        default:
+            // assume it's a digit (0–9)
+            appendDigit(value)
+            break;
         }
-        else{
-            input1 = input1 + button;
-        }
 
-        screen.innerHTML = input1;
-
-        if (input1.includes(substr)) {
-            if(input2 == 0){
-                input2 = button;
-            }
-            else{
-                input2 = input2 + button;
-            }
-
-            screen.innerHTML = input2;
-        
-            if (input2.includes(substr_eq)) {
-                screen.innerHTML = addition(input1,input2);
-            }
-        }
+        screen.innerHTML = currentInput;
 
         // play sound
         const audio = new Audio("./click.mp3");
@@ -57,11 +73,23 @@ function handleButtonClick(button)
 }
 // appends a digit (0–9) to the current input string. Stores it in currentInput.
 function appendDigit(digit){
+    
+    if (isTypingSecondOperand == true)
+    {
+        currentInput = 0;
+    }
 
+    if (shouldResetInput == false){
+        currentInput = currentInput + digit;
+
+    }   
 }
 
 // adds a . to currentInput only if one isn't already present.
 function appendDecimal(){
+    if (!(currentInput.includes('.'))){
+        currentInput = currentInput + ".";
+    }    
 
 }
 /*Stores the current input as firstOperand
@@ -73,6 +101,16 @@ Sets a flag isTypingSecondOperand = true
 Optionally highlights the operator button*/
 function handleOperator(op){
 
+    // if user enters operation
+    if(!firstOperand)
+    {
+        firstOperand = currentInput
+        currentOperator = op;
+        isTypingSecondOperand = true
+
+        highlightOperator(op);
+    }
+    
 }
 
 /*Takes firstOperand, currentOperator, and currentInput (as second operand)
@@ -99,6 +137,27 @@ function clearEntry(){
 //Removes last character from currentInput
 function delLast(){
     
+}
+/*Clear all highlights
+
+Find the button that matches op
+
+Add the class active-op to that button*/
+function highlightOperator(op){
+    console.log("highlightOperator called with", op);
+
+    // Step 1: Clear all operator highlights
+    operatorButtons.forEach(btn => {
+        btn.classList.remove("active-op");
+    });
+
+    // Step 2: Highlight the current operator
+    operatorButtons.forEach(btn => {
+        if (btn.value === op) {
+            btn.classList.add("active-op");
+            console.log("Highlighting")
+        }
+    });
 }
 function addition(x,y){
     return x+y;

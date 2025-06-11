@@ -50,4 +50,6 @@
 }
 
 .btn.active-op { 
-    background-color: aquamarine; }
+    background-color: aquamarine;
+    border: 2px solid rgb(0, 124, 27);
+}

@@ -63,9 +63,11 @@ function handleButtonClick(value)
             break;
         }
 
-        // play sound
-        const audio = new Audio("./click.mp3");
-        audio.play();
+    //TODO Chaining operations
+
+    // play sound
+    const audio = new Audio("./click.mp3");
+    audio.play();
 }
 // appends a digit (0–9) to the current input string. Stores it in currentInput.
 function appendDigit(digit){
@@ -232,5 +234,6 @@ function multiplication(x,y){
 }
 
 function division(x,y){
+    //TODO Error traps for zeros
     return x / y;
 }

@@ -16,8 +16,6 @@ let shouldResetInput = false;	    //Flag: true after =, so next digit clears scr
 
 // loop through node list in ascending order
 // for each btn object in node list do ...
-let input1 = 0;
-let input2 = 0;
 buttons.forEach(btn => {
 
     // listen for click, then do ...
@@ -65,8 +63,6 @@ function handleButtonClick(value)
             break;
         }
 
-        screen.innerHTML = currentInput;
-
         // play sound
         const audio = new Audio("./click.mp3");
         audio.play();
@@ -76,13 +72,20 @@ function appendDigit(digit){
     
     if (isTypingSecondOperand == true)
     {
-        currentInput = 0;
+        currentInput = "";
+        isTypingSecondOperand = false;
+        currentInput = digit;
+
     }
 
-    if (shouldResetInput == false){
+    else{
         currentInput = currentInput + digit;
 
-    }   
+    } 
+
+    // update screen 
+    //* update the screen in handleButtonClick resets screen
+    screen.innerHTML = currentInput;
 }
 
 // adds a . to currentInput only if one isn't already present.
@@ -121,17 +124,75 @@ Updates display and resets state
 
 Clears operator highlight*/
 function evaluateExpression(){
+    //firstOperand currentOperator currentInput
+    //! Error traps
+    if (!firstOperand){
+        console.error("first operand not set");
+        clearAll();
+        return;
+    }
+    if (!currentOperator){
+        console.error("operation not set");
+        clearAll();
+        return;
+    }
+    if (!currentInput){
+        console.error("second operand not set");
+        clearAll();
+        return;
+    }
+
+    //parse string to ints
+    let input1 = parseFloat(firstOperand);
+    let input2 = parseFloat(currentInput);
+    console.log(input1 + "\n" + input2);
+
+    if (isNaN(input1)|| isNaN(input2)){
+        console.error("inputs not numbers.")
+        clearAll();
+        return;
+    }
+
+    //preform options
+    let results = 0;
+    switch (currentOperator) {
+        case "+":
+            results = addition(input1, input2);
+            break;
+        case "-":
+            results = subtraction(input1, input2);
+            break;
+        case "*":
+            results = multiplication(input1, input2);
+            break;
+        case "/":
+            results = division(input1, input2);
+            break;
+        default:
+            console.error("inputs not numbers.")
+            clearAll();
+            return;
+    }
+
+    //parse int to string and display
+    currentInput = results.toString();
+    screen.innerHTML = currentInput;
+    clearAll();
 
 }
 
 //Resets everything (firstOperand, currentInput, operator, flags)
 function clearAll(){
-    
+    currentInput = "";          
+    firstOperand = "";	            
+    currentOperator = "";	        
+    isTypingSecondOperand = false;	
+    shouldResetInput = false;	    
 }
 
 //Clears only currentInput
 function clearEntry(){
-    
+    currentOperator = "";
 }
 
 //Removes last character from currentInput
@@ -160,5 +221,16 @@ function highlightOperator(op){
     });
 }
 function addition(x,y){
-    return x+y;
+    return x + y;
+}
+function subtraction(x, y){
+    return x - y;
+}
+
+function multiplication(x,y){
+    return x * y;
+}
+
+function division(x,y){
+    return x / y;
 }
